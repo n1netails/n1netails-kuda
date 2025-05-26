@@ -23,7 +23,7 @@ public class TailService {
 
         // Check to see if tail is configured if not log out one time warning about missing configurations.
         boolean configured = TailConfig.isConfigured();
-
+        // If configs are not set up then default to logging out message
         if (!apiUrlOpt.isPresent() || !tokenOpt.isPresent()) {
             System.out.println("[TAIL][" + level + "] " + message);
             return;
