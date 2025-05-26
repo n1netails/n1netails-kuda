@@ -14,7 +14,7 @@ Kuda can act as a simple logger but its main purpose is to send tail data over t
 up and using Kuda will be reveled later.
 
 ### Requirements
-Kuda should be setup alongside the N1netails core system but it can work without it as simple logging service for your service. 
+Kuda should be setup alongside the N1netails core system but it can work without it as simple logging service for your application. 
 Learn how to set up the core system here: [N1netails](https://github.com/n1netails/n1netails)
 
 ## Install
