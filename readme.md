@@ -19,7 +19,7 @@ Install the Kuda by adding the following dependency:
 <dependency>
     <groupId>com.n1netails</groupId>
     <artifactId>n1netails-kuda</artifactId>
-    <version>0.0.4</version>
+    <version>0.0.6</version>
 </dependency>
 ```
 
@@ -141,18 +141,18 @@ public class ExampleService {
 
         /////////////////
         // KUDA
-        // Send message with your own custom level
+        // Send message with your own custom level (replace "MY_KUDA_LEVEL" with the level you want to create)
         /////////////////
-        Tail.kuda("Testing kuda").send();
-        Tail.kuda("Testing kuda1").withTag("env", "prod").send();
-        Tail.kuda("Testing kuda2", "extra log stack details").withTag("env", "prod").send();
-        Tail.kuda("Testing kuda3", "extra log stack details", "SYSTEM_ALERT").withTag("env", "prod").send();
+        Tail.kuda("MY_KUDA_LEVEL", "Testing kuda").send();
+        Tail.kuda("MY_KUDA_LEVEL", "Testing kuda1").withTag("env", "prod").send();
+        Tail.kuda("MY_KUDA_LEVEL", "Testing kuda2", "extra log stack details").withTag("env", "prod").send();
+        Tail.kuda("MY_KUDA_LEVEL", "Testing kuda3", "extra log stack details", "SYSTEM_ALERT").withTag("env", "prod").send();
 
         Map<String, String> tags = new HashMap<>();
         tags.put("env", "prod");
         tags.put("test", "kuda");
         tags.put("n1ne", "tails-kuda");
-        Tail.kuda("Testing kuda4", "extra log stack details", "SYSTEM_ALERT").withTags(tags).send();
+        Tail.kuda("MY_KUDA_LEVEL", "Testing kuda4", "extra log stack details", "SYSTEM_ALERT").withTags(tags).send();
     }
 }
 
