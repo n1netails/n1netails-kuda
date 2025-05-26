@@ -1,6 +1,6 @@
 package com.n1netails.n1netails.kuda.api;
 
-import com.n1netails.n1netails.kuda.enums.TailLevel;
+import com.n1netails.n1netails.kuda.TailLevel;
 
 public class Tail {
 
