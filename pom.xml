@@ -1,0 +1,26 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.n1netails</groupId>
+  <artifactId>n1netails-kuda</artifactId>
+  <version>0.0.1</version>
+  <packaging>jar</packaging>
+
+  <name>n1netails-kuda</name>
+  <description>Integration library that acts as a smart link between your application and the n1netails platform quiet, powerful, and built to vanish into your stack like a spirit fox.</description>
+  <url>https://github.com/n1netails/n1netails-kuda</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.38</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+</project>
