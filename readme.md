@@ -13,13 +13,17 @@ Integration library that acts as a smart link between your application and the n
 Kuda can act as a simple logger but its main purpose is to send tail data over to `n1netails-api`. More details on setting 
 up and using Kuda will be reveled later.
 
+### Requirements
+Kuda should be setup alongside the N1netails core system but it can work without it as simple logging service for your service. 
+Learn how to set up the core system here: [N1netails](https://github.com/n1netails/n1netails)
+
 ## Install
 Install the Kuda by adding the following dependency:
 ```xml
 <dependency>
     <groupId>com.n1netails</groupId>
     <artifactId>n1netails-kuda</artifactId>
-    <version>0.0.6</version>
+    <version>0.0.7</version>
 </dependency>
 ```
 
