@@ -33,8 +33,15 @@ public class TailService {
         // Proceed with real sending logic
         String apiUrl = apiUrlOpt.get();
         String token = tokenOpt.get();
-        // send HTTP POST ...
+        // TODO send HTTP POST ...
         System.out.println("Sending Tail to api " + apiUrl + " Message: " + alert.getMessage());
+        if (!alert.getTags().isEmpty()) {
+            System.out.println("Tail tags");
+            alert.getTags().forEach((k, v) -> {
+                System.out.println("Key: " + k);
+                System.out.println("Value: " + v);
+            });
+        }
 
     }
 }
