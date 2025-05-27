@@ -23,7 +23,7 @@ Install the Kuda by adding the following dependency:
 <dependency>
     <groupId>com.n1netails</groupId>
     <artifactId>n1netails-kuda</artifactId>
-    <version>0.0.7</version>
+    <version>0.0.8</version>
 </dependency>
 ```
 
