@@ -10,6 +10,7 @@ public class TailEmitter {
 
     private final String level;
     private final String message;
+    private String description;
     private String details;
     private String type;
     private final Map<String, String> tags = new HashMap<>();
@@ -19,21 +20,23 @@ public class TailEmitter {
         this.message = message;
     }
 
-    public TailEmitter(String level, String message, String details) {
-        this.level = level;
-        this.message = message;
-        this.details = details;
+    public TailEmitter description(String description) {
+        this.description = description;
+        return this;
     }
 
-    public TailEmitter(String level, String message, String details, String type) {
-        this.level = level;
-        this.message = message;
+    public TailEmitter details(String details) {
         this.details = details;
+        return this;
+    }
+
+    public TailEmitter type(String type) {
         this.type = type;
+        return this;
     }
 
     public TailEmitter withTag(String key, String value) {
-        tags.put(key, value);
+        this.tags.put(key, value);
         return this;
     }
 
@@ -43,6 +46,6 @@ public class TailEmitter {
     }
 
     public void send() {
-        TailService.getInstance().send(new TailModel(level, message, tags, details, type));
+        TailService.getInstance().send(new TailModel(level, message, description, tags, details, type));
     }
 }

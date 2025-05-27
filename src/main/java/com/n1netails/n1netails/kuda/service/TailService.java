@@ -49,6 +49,7 @@ public class TailService {
         try {
             TailRequest tailRequest = TailRequest.builder()
                     .title(message)
+                    .description(alert.getDescription())
                     .details(alert.getDetails())
                     .level(alert.getLevel())
                     .type(alert.getType())
