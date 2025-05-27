@@ -165,7 +165,7 @@ public class ExampleService {
         tags.put("env", "prod");
         tags.put("test", "critical");
         tags.put("n1ne", "tails-critical");
-        Tail.critical("Testing kuda critical4")
+        Tail.critical("Testing kuda critical5")
                 .description("Extra description on the tail if needed")
                 .details("extra log stack details")
                 .type("SYSTEM_ALERT")
@@ -185,7 +185,7 @@ public class ExampleService {
         tags.put("env", "prod");
         tags.put("test", "kuda");
         tags.put("n1ne", "tails-kuda");
-        Tail.kuda("MY_KUDA_LEVEL", "Testing kuda4")
+        Tail.kuda("MY_KUDA_LEVEL", "Testing kuda5")
                 .description("Extra description on the tail if needed")
                 .details("extra log stack details")
                 .type("SYSTEM_ALERT")
