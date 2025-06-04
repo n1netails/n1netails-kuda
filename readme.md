@@ -23,7 +23,7 @@ Install the Kuda by adding the following dependency:
 <dependency>
     <groupId>com.n1netails</groupId>
     <artifactId>n1netails-kuda</artifactId>
-    <version>0.0.8</version>
+    <version>0.1.0</version>
 </dependency>
 ```
 
@@ -47,6 +47,8 @@ Tail.error("Testing kuda error").withTag("env", "prod").send();
 ⚠️ Note: If you do not configure the `TailConfig` then Kuda will log a single warning about missing configurations and default to simple logging.
 
 ## Use
+Use the kuda tail methods to send alerts.
+
 ### Java
 
 ```java
@@ -190,6 +192,45 @@ public class ExampleService {
                 .details("extra log stack details")
                 .type("SYSTEM_ALERT")
                 .withTags(tags).send();
+    }
+}
+
+```
+
+### Default exception handling
+Kuda can also be used to set up a default exception handler with `Tail.report` you can pass throwable exceptions to kuda and it 
+will generate a detailed report on the exception.
+
+You can also use `TailConfig.enableExceptionHandler()` to enable kuda as the default uncaught exception handler. This will allow you to capture any uncaught exceptions that you have not caught.
+
+```java
+import com.n1netails.n1netails.kuda.api.Tail;
+import com.n1netails.n1netails.kuda.internal.TailConfig;
+
+public class ExampleService {
+    
+    public ExampleService() {
+        // You can configure this anywhere must be set once.
+        TailConfig.setApiUrl("http://localhost:9901");
+        TailConfig.setN1neToken("79dd8985-2d85-4a22-bfa0-0d70e963d713");
+        // enable kuda to handle Default Uncaught Exception Handler (optional)
+        TailConfig.enableExceptionHandler();
+    }
+    
+    public void defaultExceptionHandler() {
+        // exception handler
+        try {
+            throw new IllegalArgumentException("User ID was null");
+        } catch (Exception e) {
+            Tail.report(e); // manually report caught exception
+        }
+    }
+    
+    public void uncaughtException() {
+        // handle uncaught exceptions
+        new Thread(() -> {
+            throw new RuntimeException("This will trigger the kuda handler");
+        }).start();
     }
 }
 

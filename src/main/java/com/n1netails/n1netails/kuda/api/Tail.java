@@ -1,8 +1,11 @@
 package com.n1netails.n1netails.kuda.api;
 
 import com.n1netails.n1netails.kuda.TailLevel;
+import com.n1netails.n1netails.kuda.service.ExceptionReporter;
 
 public class Tail {
+
+    private static ExceptionReporter reporter;
 
     /////////////////
     // INFO
@@ -45,5 +48,21 @@ public class Tail {
     /////////////////
     public static TailEmitter kuda(String level, String message) {
         return new TailEmitter(level, message);
+    }
+
+    /////////////////
+    // Exception reporter
+    /////////////////
+    public static void report(Throwable throwable) {
+        reporter = new ExceptionReporter();
+        reporter.reportException(throwable, Thread.currentThread().getName());
+    }
+
+    /////////////////
+    // Exception reporter
+    /////////////////
+    public static void report(String level, Throwable throwable) {
+        reporter = new ExceptionReporter();
+        reporter.reportException(level, throwable, Thread.currentThread().getName());
     }
 }
