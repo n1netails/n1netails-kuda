@@ -1,5 +1,6 @@
 package com.n1netails.n1netails.kuda.internal;
 
+import com.n1netails.n1netails.kuda.Kuda;
 import com.n1netails.n1netails.kuda.exception.TailConfigException;
 
 import java.net.MalformedURLException;
@@ -7,6 +8,10 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Tail Config
+ * @author shahid foy
+ */
 public class TailConfig {
     private static String apiUrl;
     private static UUID token;
@@ -16,6 +21,38 @@ public class TailConfig {
 
     private TailConfig() {}
 
+    /**
+     * Enable Kuda as Default Uncaught Exception Handler
+     */
+    public static void enableExceptionHandler() {
+        boolean configured = isConfigured();
+        if (configured) Kuda.init();
+        else System.out.println("[TAIL][WARN] unable to enable exception handler. Tail API URL and Tail Token must be configured first.");
+    }
+
+    /**
+     * Checks to see if Kuda has been configured correctly
+     * @return true if configured otherwise false
+     */
+    public static boolean isConfigured() {
+        boolean configured = getApiUrl().isPresent() && getToken().isPresent();
+        if (!configured && !warningLogged) {
+            warningLogged = true;
+
+            if (!getApiUrl().isPresent()) {
+                System.out.println("[TAIL][WARN] Tail API URL is not configured. Call TailConfig.setApiUrl(...)");
+            }
+            if (!getToken().isPresent()) {
+                System.out.println("[TAIL][WARN] Tail Token is not configured. Call TailConfig.setN1neToken(...)");
+            }
+        }
+        return configured;
+    }
+
+    /**
+     * Set N1netails Api Url
+     * @param url N1netails Api Url
+     */
     public static void setApiUrl(String url) {
         if (url == null || url.trim().isEmpty()) {
             throw new TailConfigException("API base URL cannot be null or empty.");
@@ -40,6 +77,10 @@ public class TailConfig {
         }
     }
 
+    /**
+     * Set N1ne Token (Generated from N1netails Api)
+     * @param token n1ne token
+     */
     public static void setN1neToken(String token) {
         if (token == null || token.trim().isEmpty()) {
             throw new TailConfigException("Token cannot be null or empty.");
@@ -51,26 +92,19 @@ public class TailConfig {
         }
     }
 
+    /**
+     * Get Configured N1netails Api Url
+     * @return api url
+     */
     public static Optional<String> getApiUrl() {
         return Optional.ofNullable(apiUrl).filter(s -> !s.isEmpty());
     }
 
+    /**
+     * Get Configured N1ne Token (Generated from N1netails Api)
+     * @return n1ne token
+     */
     public static Optional<String> getToken() {
         return Optional.ofNullable(token).map(UUID::toString);
-    }
-
-    public static boolean isConfigured() {
-        boolean configured = getApiUrl().isPresent() && getToken().isPresent();
-        if (!configured && !warningLogged) {
-            warningLogged = true;
-
-            if (!getApiUrl().isPresent()) {
-                System.out.println("[TAIL][WARN] Tail API URL is not configured. Call TailConfig.setApiUrl(...)");
-            }
-            if (!getToken().isPresent()) {
-                System.out.println("[TAIL][WARN] Tail Token is not configured. Call TailConfig.setN1neToken(...)");
-            }
-        }
-        return configured;
     }
 }
