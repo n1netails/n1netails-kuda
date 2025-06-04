@@ -6,11 +6,14 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Tail Request sent to the N1netails Api
+ * @author shahid foy
+ */
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 @ToString
 public class TailRequest {
 
@@ -23,4 +26,9 @@ public class TailRequest {
     private String type;
     @Builder.Default
     private Map<String, String> metadata = new HashMap<>();
+
+    /**
+     * Tail Request Constructor
+     */
+    private TailRequest() {}
 }

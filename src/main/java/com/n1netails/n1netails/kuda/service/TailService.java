@@ -13,6 +13,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Optional;
 
+/**
+ * Tail Service
+ * @author shahid foy
+ */
 public class TailService {
 
     private final ObjectMapper objectMapper = new ObjectMapper(); // Jackson
@@ -20,8 +24,15 @@ public class TailService {
     @Getter
     private static final TailService instance = new TailService();
 
+    /**
+     * Tail Service Constructor
+     */
     private TailService() {}
 
+    /**
+     * Send tail alert to N1netails Api
+     * @param alert tail alert
+     */
     public void send(TailModel alert) {
 
         String message = alert.getMessage();

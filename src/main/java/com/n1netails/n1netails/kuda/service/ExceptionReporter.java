@@ -13,12 +13,32 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Exception Reporter
+ * @author shahid foy
+ */
 public class ExceptionReporter {
 
+    /**
+     * Exception Reporter Constructor
+     */
+    public ExceptionReporter() {}
+
+    /**
+     * Report Exception
+     * @param throwable throwable exception
+     * @param threadName thread name
+     */
     public void reportException(Throwable throwable, String threadName) {
         this.reportException(TailLevel.ERROR.name(), throwable, threadName);
     }
 
+    /**
+     * Report Exception
+     * @param level tail level
+     * @param throwable throwable exception
+     * @param threadName thread name
+     */
     public void reportException(String level, Throwable throwable, String threadName) {
         try {
             StringWriter sw = new StringWriter();
@@ -57,7 +77,7 @@ public class ExceptionReporter {
         }
     }
 
-    private static String getHostName() {
+    private String getHostName() {
         try {
             return java.net.InetAddress.getLocalHost().getHostName();
         } catch (Exception e) {
@@ -65,7 +85,7 @@ public class ExceptionReporter {
         }
     }
 
-    public static String getLocalIp() {
+    private String getLocalIp() {
         try {
             Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
             while (interfaces.hasMoreElements()) {
