@@ -16,7 +16,7 @@ import java.util.Map;
 public class ExceptionReporter {
 
     public void reportException(Throwable throwable, String threadName) {
-        this.reportException("SYSTEM_ALERT", throwable, threadName);
+        this.reportException(TailLevel.ERROR.name(), throwable, threadName);
     }
 
     public void reportException(String level, Throwable throwable, String threadName) {
@@ -45,12 +45,12 @@ public class ExceptionReporter {
             kudatags.put("exception-type", throwable.getClass().getName());
 
             TailModel alert = new TailModel(
-                    TailLevel.ERROR.name(),
+                    level,
                     getHostName() + " | " + throwable,
                     throwable.getMessage(),
                     kudatags,
                     stackTrace,
-                    level);
+                    "SYSTEM_ALERT");
             TailService.getInstance().send(alert);
         } catch (Exception e) {
             System.out.println("There was an issue with reporting the exception: " + e.getMessage());

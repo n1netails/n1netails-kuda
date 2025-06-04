@@ -229,7 +229,7 @@ public class ExampleService {
     public void defaultExceptionHandlerWithCustomLevel() {
         // exception handler with custom tail level
         try {
-            throw new IllegalArgumentException("User ID was null");
+            throw new IllegalArgumentException("CRITICAL - User ID was null");
         } catch (Exception e) {
             Tail.report("CRITICAL", e); // manually report caught exception with custom tail level
         }
