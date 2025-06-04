@@ -201,7 +201,7 @@ public class ExampleService {
 Kuda can also be used to set up a default exception handler with `Tail.report` you can pass throwable exceptions to kuda and it 
 will generate a detailed report on the exception.
 
-You can also use `TailConfig.enableExceptionHandler()` to enable kuda as the default uncaught exception handler. This will allow you to capture any uncaught exceptions that you have not caught.
+You can also use `TailConfig.enableExceptionHandler()` to enable kuda as the default uncaught exception handler. This will allow you to capture any uncaught exceptions that you have not identified.
 
 ```java
 import com.n1netails.n1netails.kuda.api.Tail;
