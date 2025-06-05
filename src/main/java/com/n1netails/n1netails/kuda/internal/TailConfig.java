@@ -13,6 +13,9 @@ import java.util.UUID;
  * @author shahid foy
  */
 public class TailConfig {
+
+    public static final String ALERT_PATH = "/ninetails/alert";
+
     private static String apiUrl;
     private static UUID token;
 
@@ -71,7 +74,7 @@ public class TailConfig {
                     parsed.getQuery() != null) {
                 throw new TailConfigException("Base URL must not contain a path or query. Example: https[:]//your-n1netails-api[.]com");
             }
-            TailConfig.apiUrl = url + "/api/alert";
+            TailConfig.apiUrl = url + ALERT_PATH;
         } catch (MalformedURLException e) {
             throw new TailConfigException("Invalid URL format: " + url, e);
         }
