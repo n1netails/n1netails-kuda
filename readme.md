@@ -18,6 +18,7 @@ Kuda should be setup alongside the N1netails core system but it can work without
 Learn how to set up the core system here: [N1netails](https://github.com/n1netails/n1netails)
 
 ⚠️ Note: You can also use Kuda with your own custom service just make sure you have the following endpoint which will receive the tail alerts `/ninetails/alert` and a matching TailRequest POJO in your service.
+
 Example Tail Request POJO:
 ```java
 public class KudaTailRequest {
