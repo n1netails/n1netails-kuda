@@ -54,6 +54,7 @@ public class TailConfig {
 
     /**
      * Set N1netails Api Url
+     * (Example: https[:]//your-n1netails-api[.]com)
      * @param url N1netails Api Url
      */
     public static void setApiUrl(String url) {
@@ -78,6 +79,25 @@ public class TailConfig {
         } catch (MalformedURLException e) {
             throw new TailConfigException("Invalid URL format: " + url, e);
         }
+    }
+
+    /**
+     * Set N1netails Api Path
+     * (Example: /ninetails/alert)
+     * @param path N1netails Api Path
+     */
+    public static void setApiPath(String path) {
+        if (path == null || path.trim().isEmpty()) {
+            throw new TailConfigException("API path cannot be null or empty.");
+        }
+
+        path = path.trim();
+
+        if (path.charAt(0) != '/') {
+            throw new TailConfigException("The the start of the url path needs to include a forward slash '/'. Example: /ninetails/alert");
+        }
+        TailConfig.apiUrl = getBaseUrl(TailConfig.apiUrl);
+        TailConfig.apiUrl = TailConfig.apiUrl + path;
     }
 
     /**
@@ -109,5 +129,19 @@ public class TailConfig {
      */
     public static Optional<String> getToken() {
         return Optional.ofNullable(token).map(UUID::toString);
+    }
+
+    private static String getBaseUrl(String fullUrl) {
+        try {
+            java.net.URL url = new java.net.URL(fullUrl);
+            int port = url.getPort();
+            String base = url.getProtocol() + "://" + url.getHost();
+            if (port != -1 && port != url.getDefaultPort()) {
+                base += ":" + port;
+            }
+            return base;
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Invalid URL: " + fullUrl, e);
+        }
     }
 }
