@@ -17,7 +17,7 @@ public class TailConfig {
     public static final String ALERT_PATH = "/ninetails/alert";
 
     private static String apiUrl;
-    private static UUID token;
+    private static String token;
 
     // For one-time warning log
     private static boolean warningLogged = false;
@@ -109,7 +109,7 @@ public class TailConfig {
             throw new TailConfigException("Token cannot be null or empty.");
         }
         try {
-            TailConfig.token = UUID.fromString(token.trim());
+            TailConfig.token = token.trim();
         } catch (Exception e) {
             throw new TailConfigException("Invalid UUID format for token: " + token, e);
         }
@@ -128,7 +128,7 @@ public class TailConfig {
      * @return n1ne token
      */
     public static Optional<String> getToken() {
-        return Optional.ofNullable(token).map(UUID::toString);
+        return Optional.ofNullable(token);
     }
 
     private static String getBaseUrl(String fullUrl) {
