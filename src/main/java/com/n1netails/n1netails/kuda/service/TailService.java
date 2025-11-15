@@ -55,7 +55,7 @@ public class TailService {
         Optional<String> tokenOpt = TailConfig.getToken();
 
         // Check to see if tail is configured if not log out one time warning about missing configurations.
-        boolean configured = TailConfig.isConfigured();
+        TailConfig.isConfigured();
         // If configs are not set up then default to logging out message
         if (!apiUrlOpt.isPresent() || !tokenOpt.isPresent()) {
             log.warn("TailService is not configured. Skipping sending alert.");
