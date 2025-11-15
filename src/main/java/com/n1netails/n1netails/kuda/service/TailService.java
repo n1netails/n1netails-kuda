@@ -2,34 +2,27 @@ package com.n1netails.n1netails.kuda.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.n1netails.n1netails.kuda.exception.TailHttpException;
 import com.n1netails.n1netails.kuda.internal.TailConfig;
 import com.n1netails.n1netails.kuda.model.TailModel;
 import com.n1netails.n1netails.kuda.model.TailRequest;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import okhttp3.*;
+import org.jetbrains.annotations.NotNull;
 
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.io.IOException;
 import java.util.Optional;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Tail Service
  * @author shahid foy
  */
+@Slf4j
 public class TailService {
 
-    private static final ExecutorService TAIL_EXECUTOR =
-            Executors.newFixedThreadPool(4, r -> {
-                Thread t = new Thread(r);
-                t.setDaemon(true); // ensures JVM shutdown is not blocked
-                t.setName("n1netails-kuda-thread");
-                return t;
-            });
-
-    private final ObjectMapper objectMapper = new ObjectMapper(); // Jackson
+    private final ObjectMapper objectMapper;
+    private final OkHttpClient client;
 
     @Getter
     private static final TailService instance = new TailService();
@@ -37,72 +30,79 @@ public class TailService {
     /**
      * Tail Service Constructor
      */
-    private TailService() {}
+    private TailService() {
+        objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        client = new OkHttpClient.Builder()
+                .connectTimeout(60, TimeUnit.SECONDS) // connection timeout
+                .writeTimeout(60, TimeUnit.SECONDS)   // write timeout
+                .readTimeout(60, TimeUnit.SECONDS)    // read timeout
+                .callTimeout(60, TimeUnit.SECONDS)    // total call timeout
+                .build();
+    }
 
     /**
      * Send tail alert to N1netails Api
      * @param alert tail alert
      */
     public void send(TailModel alert) {
-        TAIL_EXECUTOR.submit(() -> {
-            String message = alert.getMessage();
-            String level = alert.getLevel();
+        String message = alert.getMessage();
+        String level = alert.getLevel();
 
-            Optional<String> apiUrlOpt = TailConfig.getApiUrl();
-            Optional<String> tokenOpt = TailConfig.getToken();
+        log.info("[TAIL][{}] {}", level, message);
 
-            // Check to see if tail is configured if not log out one time warning about missing configurations.
-            boolean configured = TailConfig.isConfigured();
-            // If configs are not set up then default to logging out message
-            if (!apiUrlOpt.isPresent() || !tokenOpt.isPresent()) {
-                // TAIL LOG
-                System.out.println("[TAIL][" + level + "] " + message);
-                return;
-            }
+        Optional<String> apiUrlOpt = TailConfig.getApiUrl();
+        Optional<String> tokenOpt = TailConfig.getToken();
 
-            // TAIL LOG
-            System.out.println("[TAIL][" + level + "] " + message);
-            // Proceed with real sending logic
-            String apiUrl = apiUrlOpt.get();
-            String token = tokenOpt.get();
+        // Check to see if tail is configured if not log out one time warning about missing configurations.
+        boolean configured = TailConfig.isConfigured();
+        // If configs are not set up then default to logging out message
+        if (!apiUrlOpt.isPresent() || !tokenOpt.isPresent()) {
+            log.warn("TailService is not configured. Skipping sending alert.");
+            return;
+        }
+        // Proceed with real sending logic
+        String apiUrl = apiUrlOpt.get();
+        String token = tokenOpt.get();
 
-            // Send post request
-            try {
-                TailRequest tailRequest = TailRequest.builder()
-                        .title(message)
-                        .description(alert.getDescription())
-                        .details(alert.getDetails())
-                        .level(alert.getLevel())
-                        .type(alert.getType())
-                        .metadata(alert.getTags())
-                        .build();
+        // Send post request
+        try {
+            TailRequest tailRequest = TailRequest.builder()
+                    .title(message)
+                    .description(alert.getDescription())
+                    .details(alert.getDetails())
+                    .level(alert.getLevel())
+                    .type(alert.getType())
+                    .metadata(alert.getTags())
+                    .build();
 
-                URL url = new URL(apiUrl);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("POST");
-                connection.setDoOutput(true);
-                connection.setRequestProperty("Content-Type", "application/json");
-                connection.setRequestProperty("N1ne-Token", token);
+            RequestBody body = RequestBody.create(
+                    objectMapper.writeValueAsString(tailRequest),
+                    MediaType.parse("application/json")
+            );
 
-                String payload;
-                try {
-                    objectMapper.registerModule(new JavaTimeModule());
-                    payload = objectMapper.writeValueAsString(tailRequest);
-                } catch (Exception e) {
-                    throw new TailHttpException("Failed to serialize tail request", 400);
-                }
-                try (OutputStream os = connection.getOutputStream()) {
-                    os.write(payload.getBytes());
-                    os.flush();
+            Request request = new Request.Builder()
+                    .url(apiUrl)
+                    .header("N1ne-Token", token)
+                    .post(body)
+                    .build();
+
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                    log.error("Failed sending tail alert to N1netails API", e);
                 }
 
-                int responseCode = connection.getResponseCode();
-                if (responseCode != 204 && responseCode != 200) {
-                    throw new TailHttpException("N1netails API responded with HTTP status: " + responseCode, responseCode);
+                @Override
+                public void onResponse(@NotNull Call call, @NotNull okhttp3.Response response) throws IOException {
+                    if (!response.isSuccessful()) {
+                        log.error("N1netails API responded with HTTP status: {}", response.code());
+                    }
+                    response.close();
                 }
-            } catch (Exception e) {
-                System.out.println("There was an issue with sending the tail to the n1netails-api: " + e.getMessage());
-            }
-        });
+            });
+        } catch (Exception e) {
+            log.error("Exception while preparing tail request", e);
+        }
     }
 }
