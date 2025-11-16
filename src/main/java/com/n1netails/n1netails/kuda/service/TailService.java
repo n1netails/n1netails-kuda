@@ -8,7 +8,6 @@ import com.n1netails.n1netails.kuda.model.TailRequest;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -78,7 +77,7 @@ public class TailService {
 
             RequestBody body = RequestBody.create(
                     objectMapper.writeValueAsString(tailRequest),
-                    MediaType.parse("application/json")
+                    MediaType.get("application/json")
             );
 
             Request request = new Request.Builder()
@@ -89,12 +88,12 @@ public class TailService {
 
             client.newCall(request).enqueue(new Callback() {
                 @Override
-                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                public void onFailure(Call call, IOException e) {
                     log.error("Failed sending tail alert to N1netails API", e);
                 }
 
                 @Override
-                public void onResponse(@NotNull Call call, @NotNull okhttp3.Response response) throws IOException {
+                public void onResponse(Call call, okhttp3.Response response) throws IOException {
                     if (!response.isSuccessful()) {
                         log.error("N1netails API responded with HTTP status: {}", response.code());
                     }
