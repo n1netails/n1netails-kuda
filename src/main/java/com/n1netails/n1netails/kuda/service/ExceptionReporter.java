@@ -1,6 +1,7 @@
 package com.n1netails.n1netails.kuda.service;
 
 import com.n1netails.n1netails.kuda.TailLevel;
+import com.n1netails.n1netails.kuda.internal.TailConfig;
 import com.n1netails.n1netails.kuda.model.TailModel;
 
 import java.io.PrintWriter;
@@ -48,21 +49,24 @@ public class ExceptionReporter {
             Map<String, String> kudatags = new HashMap<>();
             if (throwable.toString() != null)
                 kudatags.put("throwable", throwable.toString());
-            if (throwable.getCause() != null)
-                kudatags.put("cause", throwable.getCause().toString());
             if (throwable.getLocalizedMessage() != null)
                 kudatags.put("localized-message", throwable.getLocalizedMessage());
+            kudatags.put("exception-type", throwable.getClass().getName());
+            kudatags.put("timestamp", Instant.now().toString());
             kudatags.put("thread-name", threadName);
             kudatags.put("thread-id", String.valueOf(Thread.currentThread().getId()));
-            kudatags.put("thread-state", Thread.currentThread().getState().toString());
-            kudatags.put("host", getHostName());
-            kudatags.put("ip-local", getLocalIp());
-            kudatags.put("os", System.getProperty("os.name"));
-            kudatags.put("os-version", System.getProperty("os.version"));
-            kudatags.put("arch", System.getProperty("os.arch"));
-            kudatags.put("java-version", System.getProperty("java.version"));
-            kudatags.put("timestamp", Instant.now().toString());
-            kudatags.put("exception-type", throwable.getClass().getName());
+
+            if (TailConfig.isVerbose()) {
+                kudatags.put("thread-state", Thread.currentThread().getState().toString());
+                if (throwable.getCause() != null)
+                    kudatags.put("cause", throwable.getCause().toString());
+                kudatags.put("java-version", System.getProperty("java.version"));
+                kudatags.put("host", getHostName());
+                kudatags.put("ip-local", getLocalIp());
+                kudatags.put("os", System.getProperty("os.name"));
+                kudatags.put("os-version", System.getProperty("os.version"));
+                kudatags.put("arch", System.getProperty("os.arch"));
+            }
 
             TailModel alert = new TailModel(
                     level,

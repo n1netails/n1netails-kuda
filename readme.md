@@ -6,6 +6,11 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
+![Stars](https://img.shields.io/github/stars/n1netails/n1netails-kuda)
+![Issues](https://img.shields.io/github/issues/n1netails/n1netails-kuda)
+![Contributors](https://img.shields.io/github/contributors/n1netails/n1netails-kuda)
+![Last Commit](https://img.shields.io/github/last-commit/n1netails/n1netails-kuda)
+
 # Kuda
 Integration library that acts as a smart link between your application and the n1netails platform quiet, powerful, and built to vanish into your stack like a spirit fox.
 
@@ -47,8 +52,13 @@ Install the Kuda by adding the following dependency:
 <dependency>
     <groupId>com.n1netails</groupId>
     <artifactId>n1netails-kuda</artifactId>
-    <version>0.3.2</version>
+    <version>0.3.3</version>
 </dependency>
+```
+
+Gradle (Groovy)
+```groovy
+implementation 'com.n1netails:n1netails-kuda:0.3.3'
 ```
 
 ## Configure
@@ -256,8 +266,10 @@ public class ExampleService {
         // You can configure this anywhere must be set once.
         TailConfig.setApiUrl("http://localhost:9901");
         TailConfig.setN1neToken("n1_c7PNos3Nru2NLxVA6ANBbbJZsuJ5g8RVzZJhBpQjz5Hz7qrUB5yloRKjouRU9yzzGpbLhuZAS_ga0HQ_a7dLOQ");
-        // enable kuda to handle Default Uncaught Exception Handler (optional)
+        // (optional) enable kuda to handle Default Uncaught Exception Handler 
         TailConfig.enableExceptionHandler();
+        // (optional) set true if you would like verbose output for the Default Uncaught Exception Handler. Defaults to false
+        TailConfig.setVerbose(false);
     }
     
     public void defaultExceptionHandler() {

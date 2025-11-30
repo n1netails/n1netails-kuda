@@ -6,7 +6,6 @@ import com.n1netails.n1netails.kuda.exception.TailConfigException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * Tail Config
@@ -19,6 +18,8 @@ public class TailConfig {
     private static String apiUrl;
     private static String token;
 
+    // Controls the amount of information that is displayed by the ExceptionReporter. defaults to false
+    private static boolean verbose = false;
     // For one-time warning log
     private static boolean warningLogged = false;
 
@@ -116,6 +117,14 @@ public class TailConfig {
     }
 
     /**
+     * Set verbose details for Exception Reporter
+     * @param verbose is verbose
+     */
+    public static void setVerbose(boolean verbose) {
+        TailConfig.verbose = verbose;
+    }
+
+    /**
      * Get Configured N1netails Api Url
      * @return api url
      */
@@ -143,5 +152,13 @@ public class TailConfig {
         } catch (Exception e) {
             throw new IllegalArgumentException("Invalid URL: " + fullUrl, e);
         }
+    }
+
+    /**
+     * Is Exception Reporter details verbose?
+     * @return verbose value if false details are hidden
+     */
+    public static boolean isVerbose() {
+        return TailConfig.verbose;
     }
 }
